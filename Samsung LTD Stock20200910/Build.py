@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers import LSTM, Dropout, Dense, Activation
 import datetime
 
@@ -49,21 +49,34 @@ y_test = result[row:, -1]
 #print(x_train.shape, x_test.shape)
 
 #여기서 모델 만들어 주기
-model = Sequential()
-
-model.add(LSTM(50, return_sequences=True, input_shape=(50, 1)))
-
-model.add(LSTM(64, return_sequences=False))
-
-model.add(Dense(1, activation='linear'))
-
-model.compile(loss='mse', optimizer='rmsprop')
+# model = Sequential()
+#
+# model.add(LSTM(50, return_sequences=True, input_shape=(50, 1)))
+#
+# model.add(LSTM(64, return_sequences=False))
+#
+# model.add(Dense(1, activation='linear'))
+#
+# model.compile(loss='mse', optimizer='adam')
 
 #model.summary()
 
 #모델 만들어 졌고 그 다음에 training과정.
 
-model.fit(x_train, y_train,
-    validation_data=(x_test, y_test),
-    batch_size=10,
-    epochs=20)
+# model.fit(x_train, y_train,
+#     validation_data=(x_test, y_test),
+#     batch_size=10,
+#     epochs=20)
+
+#model.save("stockmodel1.h5")
+
+new_model = load_model("stockmodel1.h5")
+
+pred = new_model.predict(x_test)
+
+fig = plt.figure(facecolor='white', figsize=(20, 10))
+ax = fig.add_subplot(111)
+ax.plot(y_test, label='True')
+ax.plot(pred, label='Prediction')
+ax.legend()
+plt.show()
